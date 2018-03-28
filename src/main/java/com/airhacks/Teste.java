@@ -10,20 +10,24 @@ package com.airhacks;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
+
+import static java.time.Duration.ofDays;
+import static java.time.Instant.now;
 
 /**
  * TODO add a description here
@@ -35,9 +39,7 @@ public class Teste {
     private static final String URL = "http://www.caixagest.pt/simulador_cotacoes.aspx";
 
     private static final String VIEW_STATE = "__VIEWSTATE";
-    private static String VIEW_STATE_VALUE;
     private static final String VIEW_STATE_GENERATOR = "__VIEWSTATEGENERATOR";
-    private static String VIEW_STATE_GENERATOR_VALUE;
     private static final String FUNDS_DROPDOWN = "FundosDropDownList";
     private static final String DATE = "Data";
     private static final String X = "simuladorCotacoesBtn.x";
@@ -49,42 +51,37 @@ public class Teste {
     private static final String DATE_PATTERN = "dd-MM-yyyy";
 
     private static final Map<String, String> FUNDS = new HashMap<>(10);
+    private static final Map<String, String> PARAMS = new HashMap<>();
 
-    private static String SESSION_ID;
+    private static String COOKIE_SESSION_ID;
 
     public static void main(String[] args) {
-        System.out.println("Starting");
         init();
     }
-
 
     private static void init() {
         doGet();
 
         FUNDS.keySet().forEach(key -> {
-            String id = FUNDS.get(key);
 
-            String params = VIEW_STATE + "=" + VIEW_STATE_VALUE + "&" +
-                    VIEW_STATE_GENERATOR + "=" + VIEW_STATE_GENERATOR_VALUE + "&" +
-                    FUNDS_DROPDOWN + "=" + id + "&" +
-                    DATE + "=" + new SimpleDateFormat(DATE_PATTERN).format(
-                            new Date(Instant.now().minus(Duration.ofDays(1)).toEpochMilli())) + "&" +
-                    X + "=" + getRandom(MAX_X) + "&" +
-                    Y + "=" + getRandom(MAX_Y);
+            PARAMS.put(FUNDS_DROPDOWN, FUNDS.get(key));
+            PARAMS.put(DATE, new SimpleDateFormat(DATE_PATTERN).format(new Date(now().minus(ofDays(1)).toEpochMilli())));
+            PARAMS.put(X, Integer.toString(getRandom(MAX_X)));
+            PARAMS.put(Y, Integer.toString(getRandom(MAX_Y)));
 
-            StringTokenizer st = new StringTokenizer(params, "&");
-            while ((st.hasMoreTokens())) {
-                System.out.println(st.nextToken());
+            String response = doPost(URL);
+
+            Document document;
+            if (response != null) {
+                document = Jsoup.parse(response);
+                System.out.println(key + " " + (
+                        document.getElementById("cotacao") == null ? "null" : document.getElementById("cotacao").wholeText()));
             }
-            System.out.println("Cookie="+SESSION_ID);
-
-            String response = doPost(URL, params);
-            System.out.println(response);
-
-            Document document = Jsoup.parse(response);
-            System.out.println(key + " " + (
-                    document.getElementById("cotacao") == null ? "null" : document.getElementById("cotacao").val()));
-            System.exit(0);
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -92,19 +89,17 @@ public class Teste {
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(URL).openConnection();
             con.setRequestMethod("GET");
-            parseValues(readStream(con.getInputStream()));
             getCookie(con);
+            parseFormValues(readStream(con.getInputStream()));
             con.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static String doPost(final String targetURL, final String urlParameters) {
+    private static String doPost(final String targetURL) {
         HttpURLConnection connection = null;
-//
-//        byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-//        int postDataLength = postData.length;
+        String postData = encodeParams();
 
         try {
             //Create connection
@@ -113,7 +108,7 @@ public class Teste {
             connection.setRequestMethod("POST");
 
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Cookie", SESSION_ID);
+            connection.setRequestProperty("Cookie", COOKIE_SESSION_ID);
 //            connection.setRequestProperty(
 //                    "User-Agent",
 //                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
@@ -122,17 +117,15 @@ public class Teste {
 //                    "Accept",
 //                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
 //            );
-//            connection.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            connection.setRequestProperty("Content-Length", Integer.toString(postData.getBytes().length));
 
             connection.setUseCaches(false);
             connection.setDoOutput(true);
 
             //Send request
             try (final DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-                //wr.write(Base64.getEncoder().encode(urlParameters.getBytes()));
-                wr.writeChars(URLEncoder.encode(urlParameters, "UTF-8"));
+                wr.write(postData.getBytes());
                 wr.flush();
-                wr.close();
             }
 
             //Get Response
@@ -147,6 +140,19 @@ public class Teste {
         }
     }
 
+    private static String encodeParams() {
+        final StringBuilder builder = new StringBuilder();
+        PARAMS.keySet().forEach(key -> {
+            try {
+                builder.append(key).append("=").append(URLEncoder.encode(
+                        PARAMS.get(key), "UTF-8")).append("&");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        });
+        return builder.toString();
+    }
+
     private static void getCookie(HttpURLConnection con) {
         for (int i = 0; ; i++) {
             String headerName = con.getHeaderFieldKey(i);
@@ -157,19 +163,18 @@ public class Teste {
             }
             if ("Set-Cookie".equalsIgnoreCase(headerName)) {
                 String[] fields = headerValue.split(";\\s*");
-                SESSION_ID = fields[0];
+                COOKIE_SESSION_ID = fields[0];
             }
         }
     }
 
-    private static void parseValues(String html) {
+    private static void parseFormValues(String html) {
         Document doc = Jsoup.parse(html);
 
-        VIEW_STATE_VALUE = doc.select("input[name=" + VIEW_STATE + "]").val();
-        VIEW_STATE_GENERATOR_VALUE = doc.select("input[name=" + VIEW_STATE_GENERATOR + "]").val();
+        PARAMS.put(VIEW_STATE, doc.select("input[name=" + VIEW_STATE + "]").val());
+        PARAMS.put(VIEW_STATE_GENERATOR, doc.select("input[name=" + VIEW_STATE_GENERATOR + "]").val());
 
-        doc.getElementsByTag("select").get(1).select("option[value!=\"\"]")
-                .stream().forEach(node -> {
+        doc.getElementsByTag("select").get(1).select("option[value!=\"\"]").forEach(node -> {
             if (node.val().compareTo(node.wholeText()) != 0)
                 FUNDS.put(node.wholeText(), node.val());
         });

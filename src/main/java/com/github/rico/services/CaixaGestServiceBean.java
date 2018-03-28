@@ -1,4 +1,4 @@
 package com.github.rico.services;
 
-public class CaixaGestService {
+public class CaixaGestServiceBean {
 }
