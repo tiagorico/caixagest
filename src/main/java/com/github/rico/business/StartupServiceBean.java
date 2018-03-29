@@ -1,4 +1,4 @@
-package com.github.rico.services;
+package com.github.rico.business;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;

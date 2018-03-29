@@ -5,7 +5,7 @@
  * This software is the proprietary information of Present Technologies Lda.
  * Use is subject to license terms.
  */
-package com.github.rico.entities;
+package com.github.rico.entity;
 
 import lombok.*;
 

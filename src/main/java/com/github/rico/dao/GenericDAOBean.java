@@ -1,11 +1,3 @@
-/*
- * Copyright (c) Stratio Lda., All Rights Reserved.
- * (www.stratio.pt)
- *
- * This software is the proprietary information of Stratio Lda.
- * Use is subject to license terms.
- */
-
 package com.github.rico.dao;
 
 import org.slf4j.Logger;
