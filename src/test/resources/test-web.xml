@@ -5,7 +5,7 @@
         xmlns="http://java.sun.com/xml/ns/javaee"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <display-name>jamWEB - API</display-name>
+    <display-name>CaixaGest Share Management</display-name>
 
     <session-config>
         <session-timeout>30</session-timeout>
@@ -17,7 +17,7 @@
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>jamuser</role-name>
+            <role-name>caixagest</role-name>
         </auth-constraint>
         <user-data-constraint>
             <transport-guarantee>NONE</transport-guarantee>
@@ -26,10 +26,10 @@
 
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>JamRealm</realm-name>
+        <realm-name>CaixagestRealm</realm-name>
     </login-config>
 
     <security-role>
-        <role-name>jamuser</role-name>
+        <role-name>caixagest</role-name>
     </security-role>
 </web-app>

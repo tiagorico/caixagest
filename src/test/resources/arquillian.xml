@@ -10,11 +10,11 @@
             <property name="stopPort">-1</property>
             <property name="dir">target/server</property>
             <property name="appWorkingDir">target/arquillian</property>
-            <property name="serverXml">src/test/tomee/config/server.xml</property>
+            <property name="serverXml">src/test/resources/tomee/config/server.xml</property>
         </configuration>
     </container>
 
     <extension qualifier="persistence">
-        <property name="defaultDataSource">openejb:Resource/jamDS</property>
+        <property name="defaultDataSource">openejb:Resource/caixagestDS</property>
     </extension>
 </arquillian>

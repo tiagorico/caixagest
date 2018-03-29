@@ -11,8 +11,11 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,9 +35,9 @@ import java.util.UUID;
 public class Fund {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     private UUID id;
 
-    @Column(name = "name", length = 100, unique = true, nullable = false)
+    @Column(name = "NAME", length = 100, unique = true, nullable = false)
     private String name;
 }

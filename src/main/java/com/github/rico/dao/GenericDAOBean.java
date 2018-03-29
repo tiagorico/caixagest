@@ -31,7 +31,7 @@ import static java.util.Optional.of;
 @SuppressWarnings("unchecked")
 public abstract class GenericDAOBean<T, PK extends Serializable> {
     private final Logger LOG = LoggerFactory.getLogger(GenericDAOBean.class);
-    @PersistenceContext(unitName = "jamPu")
+    @PersistenceContext(unitName = "caixagestPu")
     protected EntityManager manager;
     private Class<T> persistentClass;
     private Class<PK> primaryKeyClass;

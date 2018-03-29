@@ -4,19 +4,13 @@
 
     <!-- activate next line to be able to deploy applications in apps -->
     <!-- <Deployments dir="apps" /> -->
-    <!--Resource id="jamDS_old" type="DataSource">
-        jdbcDriver com.microsoft.sqlserver.jdbc.SQLServerDriver
-        jdbcUrl jdbc:sqlserver://localhost:50871
-        userName sa
-        password sqlserver
-    </Resource-->
 
     <!--Since password contains non utf-8 we need to skip them for \ use \\-->
-    <Resource id="jamDS" type="DataSource">
-        jdbcDriver com.microsoft.sqlserver.jdbc.SQLServerDriver
-        jdbcUrl jdbc:sqlserver://north-jam-db-server.database.windows.net:1433;databaseName=JAM-DB-DEMO
-        userName stratio
-        password Eu029RieO2*\\uYu
+    <Resource id="caixagestDS" type="DataSource">
+        JdbcDriver   org.postgresql.Driver
+        JdbcUrl  jdbc:postgresql://localhost:15433/caixagest
+        userName postgres
+        password secret
 
         initialSize 20
         jtaManaged true

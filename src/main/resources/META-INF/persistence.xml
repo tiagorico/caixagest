@@ -5,23 +5,12 @@
                 http://java.sun.com/xml/ns/persistence
                 http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
-  <persistence-unit name="jamPu" transaction-type="JTA">
+  <persistence-unit name="caixagestPu" transaction-type="JTA">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <jta-data-source>java:/jamDS</jta-data-source>
+    <jta-data-source>java:/caixagestDS</jta-data-source>
 
-    <class>com.stratio.jam.api.entity.AuditableEntity</class>
-    <class>com.stratio.jam.api.entity.User</class>
-    <class>com.stratio.jam.api.entity.Role</class>
-    <class>com.stratio.jam.api.entity.Vehicle</class>
-    <class>com.stratio.jam.api.entity.JamDevice</class>
-    <class>com.stratio.jam.api.entity.JamDeviceVehicle</class>
-    <class>com.stratio.jam.api.entity.Wifi</class>
-    <class>com.stratio.jam.api.entity.DiagnosticTroubleCode</class>
-    <class>com.stratio.jam.api.entity.DTCStatus</class>
-    <class>com.stratio.jam.api.entity.Trip</class>
-    <class>com.stratio.jam.api.entity.Position</class>
-    <class>com.stratio.jam.api.entity.Notification</class>
-    <class>com.stratio.jam.api.entity.Prediction</class>
+    <class>com.github.rico.entity.Fund</class>
+    <class>com.github.rico.entity.Rating</class>
 
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
