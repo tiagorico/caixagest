@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomee>
+    <!-- see http://tomee.apache.org/containers-and-resources.html -->
+
+    <!-- activate next line to be able to deploy applications in apps -->
+    <!-- <Deployments dir="apps" /> -->
+    <!--Resource id="jamDS_old" type="DataSource">
+        jdbcDriver com.microsoft.sqlserver.jdbc.SQLServerDriver
+        jdbcUrl jdbc:sqlserver://localhost:50871
+        userName sa
+        password sqlserver
+    </Resource-->
+
+    <!--Since password contains non utf-8 we need to skip them for \ use \\-->
+    <Resource id="jamDS" type="DataSource">
+        jdbcDriver com.microsoft.sqlserver.jdbc.SQLServerDriver
+        jdbcUrl jdbc:sqlserver://north-jam-db-server.database.windows.net:1433;databaseName=JAM-DB-DEMO
+        userName stratio
+        password Eu029RieO2*\\uYu
+
+        initialSize 20
+        jtaManaged true
+        maxActive 60
+        maxIdle 20
+        maxWaitTime -1 millisecond
+        minEvictableIdleTime 30 minutes
+        minIdle 5
+        numTestsPerEvictionRun 3
+        testOnBorrow true
+        testOnReturn = false
+        testWhileIdle = false
+        timeBetweenEvictionRuns = -1 millisecond
+        validationQuery SELECT 1
+    </Resource>
+</tomee>
