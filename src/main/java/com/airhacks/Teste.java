@@ -10,17 +10,13 @@ package com.airhacks;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +52,9 @@ public class Teste {
     private static String COOKIE_SESSION_ID;
 
     public static void main(String[] args) {
-        init();
+        System.out.println(LocalDate.parse("01-01-2000", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        System.out.println(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        //init();
     }
 
     private static void init() {
@@ -77,6 +75,7 @@ public class Teste {
                 System.out.println(key + " " + (
                         document.getElementById("cotacao") == null ? "null" : document.getElementById("cotacao").wholeText()));
             }
+            System.exit(0);
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException e) {
@@ -169,6 +168,9 @@ public class Teste {
     }
 
     private static void parseFormValues(String html) {
+        System.out.println(html);
+        System.out.println();
+        System.out.println();
         Document doc = Jsoup.parse(html);
 
         PARAMS.put(VIEW_STATE, doc.select("input[name=" + VIEW_STATE + "]").val());

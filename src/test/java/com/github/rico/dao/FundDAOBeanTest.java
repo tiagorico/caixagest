@@ -1,6 +1,6 @@
 package com.github.rico.dao;
 
-import com.github.rico.common.BaseResourceTest;
+import com.github.rico.common.TestUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -17,7 +17,7 @@ import static junit.framework.TestCase.assertTrue;
  * @author rico
  */
 @RunWith(Arquillian.class)
-public class FundDAOBeanTest extends BaseResourceTest {
+public class FundDAOBeanTest extends TestUtils {
 
     @Inject
     private FundDAOBean fundDAOBean;
@@ -29,6 +29,7 @@ public class FundDAOBeanTest extends BaseResourceTest {
 
     @Test
     public void testFindAll() {
+        System.out.println(fundDAOBean.findAll().size());
         assertTrue(fundDAOBean.findAll().size() > 0);
     }
 

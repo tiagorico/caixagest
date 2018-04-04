@@ -9,14 +9,11 @@ package com.github.rico.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
+
+import static lombok.AccessLevel.PRIVATE;
 
 /**
  * Entity for fund
@@ -26,18 +23,36 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@ToString
+@ToString(exclude = "ratings")
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@AllArgsConstructor(access = PRIVATE)
+@EqualsAndHashCode(exclude = {"id", "name", "status", "ratings"})
 @Entity
 @Table(name = "FUND")
 public class Fund {
 
-    @Id
-    @Column(name = "ID")
-    private UUID id;
+    public enum Status {
+        DISABLE, ENABLE;
+    }
 
-    @Column(name = "NAME", length = 100, unique = true, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "fund_sequence", sequenceName = "FUND_SEQUENCE_GENERATOR")
+    @Column(name = "ID", nullable = false)
+    private Integer id;
+
+    @Column(name = "UUID", length = 30, unique = true, nullable = false)
+    private UUID uuid;
+
+    @Column(name = "NAME", length = 50, nullable = false)
     private String name;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "STATUS", length = 7, nullable = false)
+    private Status status;
+
+    @OneToMany(mappedBy = "fund", cascade = CascadeType.ALL)
+    @OrderBy(value = "date")
+    private Set<Rating> ratings;
+
 }

@@ -11,19 +11,19 @@ import java.net.URL;
  * <p>
  * Created by Rico on 19/01/2017
  */
-public class BaseResourceTest {
+public class TestUtils {
 
     @ArquillianResource
     private URL webAppUrl;
 
     public static WebArchive getWebArchive() {
-        return createCommon().addPackages(true, "com.github.rico");
+        return createCommon().addPackages(true, "com.github.rico.entity", "com.github.rico.dao");
     }
 
     private static WebArchive createCommon() {
         return ShrinkWrap.create(WebArchive.class, "caixagest.war")
                 .addClass(ProvisionTestData.class)
-                .addAsResource("META-INF/persistence.xml")
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("META-INF/beans.xml")
                 .setWebXML("test-web.xml")
                 .addAsResource("./tomee/config/test-jaas.config", "jaas.config")

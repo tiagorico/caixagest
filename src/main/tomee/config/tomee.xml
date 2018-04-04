@@ -8,9 +8,9 @@
     <!--Since password contains non utf-8 we need to skip them for \ use \\-->
     <Resource id="caixagestDS" type="DataSource">
         JdbcDriver   org.postgresql.Driver
-        JdbcUrl  jdbc:postgresql://localhost:15433/caixagest
-        userName postgres
-        password secret
+        JdbcUrl jdbc:postgresql://localhost:5432/caixagest
+        userName caixagest
+        password caixagest
 
         initialSize 20
         jtaManaged true

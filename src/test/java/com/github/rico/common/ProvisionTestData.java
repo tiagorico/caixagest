@@ -9,11 +9,13 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaQuery;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
  */
 @Startup
 @Singleton
+@TransactionAttribute(value = TransactionAttributeType.SUPPORTS)
 public class ProvisionTestData {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ProvisionTestData.class);
@@ -34,14 +37,17 @@ public class ProvisionTestData {
 
         LOGGER.info("************************* INSERT TEST DATA **************************************");
 
-        //entityManager.createQuery("DELETE FROM Prediction ").executeUpdate();
+        //entityManager.createQuery("DELETE FROM com.github.rico.entity.Fund").executeUpdate();
         final List<Fund> funds = new ArrayList<>();
-        Fund fund = Fund.builder().id(UUID.randomUUID()).name("Teste").build();
-        funds.add(fund);
+        funds.add(Fund.builder().uuid(UUID.randomUUID()).name("Teste").status(Fund.Status.ENABLE).build());
+        funds.add(Fund.builder().uuid(UUID.randomUUID()).name("Teste 2").status(Fund.Status.ENABLE).build());
         funds.forEach(entityManager::persist);
 
         final List<Rating> ratings = new ArrayList<>();
-        ratings.add(Rating.builder().date(LocalDateTime.now()).fund(fund).value(2D).build());
+        Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).stream().forEach(i ->
+                ratings.add(Rating.builder().date(LocalDate.now().minusDays((long) i))
+                        .fund(funds.get(0)).value(i.doubleValue()).build())
+        );
         ratings.forEach(entityManager::persist);
 
         entityManager.flush();
@@ -52,11 +58,12 @@ public class ProvisionTestData {
 
         LOGGER.info("************************* DELETE TEST DATA **************************************");
 
-        final CriteriaQuery<Object> allFunds = entityManager.getCriteriaBuilder().createQuery();
-        entityManager.createQuery(allFunds.select(allFunds.from(Fund.class)))
-                .getResultList()
-                .forEach(entityManager::remove);
-
+//        final CriteriaQuery<Object> allFunds = entityManager.getCriteriaBuilder().createQuery();
+//        entityManager.createQuery(allFunds.select(allFunds.from(Fund.class)))
+//                .getResultList()
+//                .forEach(entityManager::remove);
+        entityManager.createQuery("DELETE FROM com.github.rico.entity.Rating").executeUpdate();
+        entityManager.createQuery("DELETE FROM com.github.rico.entity.Fund").executeUpdate();
 
     }
 }

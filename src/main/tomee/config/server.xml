@@ -126,7 +126,7 @@
 
             <!--JAAS REALM-->
             <Realm className="org.apache.catalina.realm.JAASRealm"
-                   appName="CaixagestSQLLogin"
+                   appName="CaixagestLogin"
                    configFile="jaas.config"
                    userClassNames="org.apache.openejb.core.security.jaas.UserPrincipal"
                    roleClassNames="org.apache.openejb.core.security.jaas.GroupPrincipal">
