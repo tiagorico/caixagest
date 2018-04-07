@@ -51,7 +51,7 @@ public class CaixaGestServiceBean {
         Map<String, String> params = parseViewState(document);
         params.put(PROPERTIES.getParamFundsDropdown(), fund.getUuid().toString());
 
-        LocalDate initialDate = ratingDAOBean.findMaxDateFromFund(fund.getUuid()).orElse
+        LocalDate initialDate = ratingDAOBean.findMaxDateFromFund(fund.getId()).orElse
                 (LocalDate.parse(PROPERTIES.getInitialDate(), DateTimeFormatter.ofPattern(PROPERTIES
                         .getDatePattern())));
         initialDate = initialDate.plusDays(1);

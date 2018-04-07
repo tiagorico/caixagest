@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
@@ -24,15 +23,15 @@ public class RatingDAOBean extends GenericDAOBean<Rating, RatingID> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingDAOBean.class);
 
-    public List<Rating> findAllFromFund(UUID fundId) {
+    public List<Rating> findAllFromFund(Integer fundId) {
         TypedQuery<Rating> query = manager.createQuery(
                 "SELECT r FROM Rating r WHERE r.id.fund.id = :fundId ORDER BY r.id.date ASC", Rating.class);
         return query.setParameter("fundId", fundId).getResultList();
     }
 
-    public Optional<LocalDate> findMaxDateFromFund(UUID fundId) {
+    public Optional<LocalDate> findMaxDateFromFund(Integer fundId) {
         TypedQuery<LocalDate> query = manager.createQuery(
-                "SELECT max(r.id.date) FROM Rating r WHERE r.id.fund.uuid = :fundId", LocalDate.class);
+                "SELECT max(r.id.date) FROM Rating r WHERE r.id.fund.id = :fundId", LocalDate.class);
         query.setParameter("fundId", fundId);
 
         Optional<LocalDate> result = empty();
