@@ -34,8 +34,8 @@ public class RatingDAOBeanTest extends TestUtils {
 
     @Test
     public void testLastDate() {
-        assertTrue(ratingDAOBean.findMinDateFromFund(1).isPresent());
-        assertTrue(!ratingDAOBean.findMinDateFromFund(2).isPresent());
+        assertTrue(ratingDAOBean.findMaxDateFromFund(1).isPresent());
+        assertTrue(!ratingDAOBean.findMaxDateFromFund(2).isPresent());
     }
 
 }

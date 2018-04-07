@@ -1,5 +1,6 @@
 package com.github.rico.utils;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,26 +22,35 @@ public final class SystemProperties {
 
     private final String datePattern = "dd-MM-yyyy";
 
-    private final String initialDate = "01-01-2000";
+    private final String initialDate = "01-04-2018";
 
     private final String url = "http://www.caixagest.pt/simulador_cotacoes.aspx";
 
+    @Getter
     private final String paramViewstate = "__VIEWSTATE";
 
+    @Getter
     private final String paramViewStateGenerator = "__VIEWSTATEGENERATOR";
 
+    @Getter
     private final String paramFundsDropdown = "FundosDropDownList";
 
+    @Getter
     private final String paramDate = "Data";
 
+    @Getter
     private final String paramX = "simuladorCotacoesBtn.x";
 
+    @Getter
     private final String paramY = "simuladorCotacoesBtn.y";
 
+    @Getter
     private final int maxX = 113;
 
+    @Getter
     private final int maxY = 30;
 
+    private final int batchSize = 10;
 
     /**
      * Private constructor. Use SystemProperties.PROPERTIES instead.
@@ -48,13 +58,6 @@ public final class SystemProperties {
     private SystemProperties() {
     }
 
-    /**
-     * Check fot the values on the system or else return default ones
-     *
-     * @param key          the key to search for
-     * @param defaultValue the default channelName
-     * @return a string channelName
-     */
     private String getValue(String key, Object defaultValue) {
         String value = String.valueOf(defaultValue);
 
@@ -67,30 +70,14 @@ public final class SystemProperties {
         return value;
     }
 
-    /**
-     * Get the date time second pattern
-     *
-     * @return pattern string
-     */
     public String getDateTimePattern() {
         return getValue("caixagest.date.time.pattern", dateTimePattern);
     }
 
-    /**
-     * Get the date pattern
-     *
-     * @return a pattern string
-     */
     public String getDatePattern() {
         return getValue("caixagest.date.pattern", datePattern);
     }
 
-
-    /**
-     * Get the date pattern
-     *
-     * @return a pattern string
-     */
     public String getInitialDate() {
         return getValue("caixagest.initial.date", initialDate);
     }
@@ -99,35 +86,7 @@ public final class SystemProperties {
         return getValue("caixagest.url", url);
     }
 
-    public String getParamViewstate() {
-        return paramViewstate;
-    }
-
-    public String getParamViewStateGenerator() {
-        return paramViewStateGenerator;
-    }
-
-    public String getParamFundsDropdown() {
-        return paramFundsDropdown;
-    }
-
-    public String getParamDate() {
-        return paramDate;
-    }
-
-    public String getParamX() {
-        return paramX;
-    }
-
-    public String getParamY() {
-        return paramY;
-    }
-
-    public int getMaxX() {
-        return maxX;
-    }
-
-    public int getMaxY() {
-        return maxY;
+    public int getBatchSize() {
+        return Integer.valueOf(getValue("caixagest.batch.size", batchSize));
     }
 }

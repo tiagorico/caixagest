@@ -1,6 +1,7 @@
 package com.github.rico.dao;
 
 import com.github.rico.entity.Rating;
+import com.github.rico.entity.RatingID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
@@ -18,19 +20,19 @@ import static javax.transaction.Transactional.TxType.SUPPORTS;
 
 @ApplicationScoped
 @Transactional(SUPPORTS)
-public class RatingDAOBean extends GenericDAOBean<Rating, Integer> {
+public class RatingDAOBean extends GenericDAOBean<Rating, RatingID> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingDAOBean.class);
 
-    public List<Rating> findAllFromFund(Integer fundId) {
+    public List<Rating> findAllFromFund(UUID fundId) {
         TypedQuery<Rating> query = manager.createQuery(
-                "SELECT r FROM Rating r WHERE r.fund.id = :fundId ORDER BY r.date ASC", Rating.class);
+                "SELECT r FROM Rating r WHERE r.id.fund.id = :fundId ORDER BY r.id.date ASC", Rating.class);
         return query.setParameter("fundId", fundId).getResultList();
     }
 
-    public Optional<LocalDate> findMinDateFromFund(Integer fundId) {
+    public Optional<LocalDate> findMaxDateFromFund(UUID fundId) {
         TypedQuery<LocalDate> query = manager.createQuery(
-                "SELECT max(r.date) FROM Rating r WHERE r.fund.id = :fundId", LocalDate.class);
+                "SELECT max(r.id.date) FROM Rating r WHERE r.id.fund.uuid = :fundId", LocalDate.class);
         query.setParameter("fundId", fundId);
 
         Optional<LocalDate> result = empty();

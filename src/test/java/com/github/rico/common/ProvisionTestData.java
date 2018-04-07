@@ -2,6 +2,7 @@ package com.github.rico.common;
 
 import com.github.rico.entity.Fund;
 import com.github.rico.entity.Rating;
+import com.github.rico.entity.RatingID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,8 @@ public class ProvisionTestData {
 
         LOGGER.info("************************* INSERT TEST DATA **************************************");
 
-        //entityManager.createQuery("DELETE FROM com.github.rico.entity.Fund").executeUpdate();
+        entityManager.createNativeQuery("ALTER SEQUENCE hibernate_sequence RESTART WITH 1").executeUpdate();
+
         final List<Fund> funds = new ArrayList<>();
         funds.add(Fund.builder().uuid(UUID.randomUUID()).name("Teste").status(Fund.Status.ENABLE).build());
         funds.add(Fund.builder().uuid(UUID.randomUUID()).name("Teste 2").status(Fund.Status.ENABLE).build());
@@ -45,8 +47,8 @@ public class ProvisionTestData {
 
         final List<Rating> ratings = new ArrayList<>();
         Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).stream().forEach(i ->
-                ratings.add(Rating.builder().date(LocalDate.now().minusDays((long) i))
-                        .fund(funds.get(0)).value(i.doubleValue()).build())
+                ratings.add(Rating.builder().id(RatingID.builder().date(LocalDate.now().minusDays((long) i))
+                        .fund(funds.get(0)).build()).value(i.doubleValue()).build())
         );
         ratings.forEach(entityManager::persist);
 

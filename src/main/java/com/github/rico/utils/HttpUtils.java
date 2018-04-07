@@ -7,6 +7,9 @@
  */
 package com.github.rico.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,11 +26,14 @@ import static com.github.rico.utils.SystemProperties.PROPERTIES;
  */
 public class HttpUtils {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
+
     public static final String COOKIE = "COOKIE";
 
     public static final String HTML = "HTML";
 
     public static Map<String, String> doGet() {
+        LOGGER.trace("Do GET to {}", PROPERTIES.getUrl());
         Map<String, String> values = new HashMap<>();
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(PROPERTIES.getUrl()).openConnection();
@@ -42,9 +48,9 @@ public class HttpUtils {
     }
 
     public static String doPost(String cookieSessionId, Map<String, String> params) {
+        LOGGER.debug("Do POST to {} with {}.", PROPERTIES.getUrl(), cookieSessionId);
         HttpURLConnection connection = null;
-        String postData = encodeParams(params);
-
+        final String postData = encodeParams(params);
         try {
             //Create connection
             final URL url = new URL(PROPERTIES.getUrl());
@@ -87,6 +93,7 @@ public class HttpUtils {
     private static String encodeParams(Map<String, String> params) {
         final StringBuilder builder = new StringBuilder();
         params.keySet().forEach(key -> {
+            LOGGER.trace("Adding param {}={}", key, params.get(key));
             try {
                 builder.append(key).append("=").append(URLEncoder.encode(
                         params.get(key), "UTF-8")).append("&");
@@ -99,14 +106,14 @@ public class HttpUtils {
 
     private static String getCookie(HttpURLConnection con) {
         for (int i = 0; ; i++) {
-            String headerName = con.getHeaderFieldKey(i);
-            String headerValue = con.getHeaderField(i);
+            final String headerName = con.getHeaderFieldKey(i);
+            final String headerValue = con.getHeaderField(i);
 
             if (headerName == null && headerValue == null) {
                 break;
             }
             if ("Set-Cookie".equalsIgnoreCase(headerName)) {
-                String[] fields = headerValue.split(";\\s*");
+                final String[] fields = headerValue.split(";\\s*");
                 return fields[0];
             }
         }
@@ -119,6 +126,7 @@ public class HttpUtils {
             String inputLine;
             while ((inputLine = in.readLine()) != null) content.append(inputLine);
         }
+        LOGGER.debug(content.toString());
         return content.toString();
     }
 

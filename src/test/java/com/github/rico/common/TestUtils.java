@@ -23,7 +23,7 @@ public class TestUtils {
     private static WebArchive createCommon() {
         return ShrinkWrap.create(WebArchive.class, "caixagest.war")
                 .addClass(ProvisionTestData.class)
-                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsResource("META-INF/persistence.xml")
                 .addAsResource("META-INF/beans.xml")
                 .setWebXML("test-web.xml")
                 .addAsResource("./tomee/config/test-jaas.config", "jaas.config")

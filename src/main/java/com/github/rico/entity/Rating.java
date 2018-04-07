@@ -9,10 +9,12 @@ package com.github.rico.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
 
-import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
@@ -21,28 +23,18 @@ import static lombok.AccessLevel.PRIVATE;
  * @author rico
  */
 @Getter
-@Setter
 @Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
 @EqualsAndHashCode
 @Entity
-@Table(name = "RATING")
-public class Rating {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "rating_sequence", sequenceName = "RATING_SEQUENCE_GENERATOR")
-    @Column(name = "ID", nullable = false)
-    private Integer id;
+@Table(name = "rating")
+public class Rating implements Serializable {
+    @EmbeddedId
+    private RatingID id;
 
-    @Column(name = "DATE", unique = true, nullable = false)
-    private LocalDate date;
-
-    @Column(name = "VALUE", nullable = false)
+    @Column(name = "value", nullable = false)
     private Double value;
 
-    @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "FUND_ID", foreignKey = @ForeignKey(name = "FK_RATING_FUND"))
-    private Fund fund;
 }

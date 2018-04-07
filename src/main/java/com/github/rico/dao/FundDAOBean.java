@@ -23,7 +23,7 @@ public class FundDAOBean extends GenericDAOBean<Fund, Integer> {
 
     public Optional<Fund> findFundByUUID(UUID uuid) {
         TypedQuery<Fund> query = manager.createQuery(
-                "SELECT f FROM Fund r WHERE r.uuid = :uuid", Fund.class);
+                "SELECT f FROM Fund f WHERE f.uuid = :uuid", Fund.class);
         query.setParameter("uuid", uuid);
         Optional<Fund> result = empty();
         try {
