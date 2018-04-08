@@ -10,6 +10,8 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
@@ -32,24 +34,20 @@ public class StartupServiceBean {
 
     @PostConstruct
     public void onCreate() throws InterruptedException, ExecutionException, TimeoutException {
+        LocalDateTime startTime = LocalDateTime.now();
         LOGGER.info("Starting up Caixagest.");
         //check for updates on caixagest
         executor = Executors.newSingleThreadExecutor();
-        // execute the timer task
-
+        // execute the task
         final Future<List<Fund>> future = executor.submit(() -> caixaGestServiceBean.checkFunds());
         final List<Fund> existing = future.get(5, TimeUnit.SECONDS);
-        shutdownAndAwaitTermination(executor);
 
         LOGGER.info("Proceeding with {} funds.", existing.size());
 
         pool = Executors.newFixedThreadPool(existing.size());
-        existing.forEach(fund -> pool.execute(() -> updateRates(fund)));
-        shutdownAndAwaitTermination(pool);
-    }
+        existing.forEach(fund -> pool.execute(() -> caixaGestServiceBean.updateRates(fund)));
 
-    private void updateRates(final Fund fund) {
-        caixaGestServiceBean.updateRates(fund);
+        LOGGER.info("Took me {} to complete.", startTime.until(LocalDateTime.now(), ChronoUnit.SECONDS));
     }
 
     @PreDestroy

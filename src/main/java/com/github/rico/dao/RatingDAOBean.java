@@ -42,5 +42,4 @@ public class RatingDAOBean extends GenericDAOBean<Rating, RatingID> {
         }
         return result;
     }
-
 }

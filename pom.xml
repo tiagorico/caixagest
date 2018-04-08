@@ -67,7 +67,7 @@
                 <version>${version.tomee}</version>
                 <configuration>
                     <tomeeVersion>${version.tomee}</tomeeVersion>
-                    <tomeeClassifier>webprofile</tomeeClassifier>
+                    <tomeeClassifier>plus</tomeeClassifier>
                     <context>caixagest</context>
                     <config>src/main/tomee/config</config>
                     <debug>false</debug>
@@ -163,6 +163,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.15.3</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- TEST -->
         <dependency>
             <groupId>junit</groupId>
@@ -182,6 +189,11 @@
                     <artifactId>openjpa</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>openejb-core</artifactId>
+            <version>7.0.4</version>
         </dependency>
     </dependencies>
 </project>

@@ -22,7 +22,7 @@ public final class SystemProperties {
 
     private final String datePattern = "dd-MM-yyyy";
 
-    private final String initialDate = "01-04-2018";
+    private final String initialDate = "01-01-2000";
 
     private final String url = "http://www.caixagest.pt/simulador_cotacoes.aspx";
 
@@ -49,8 +49,6 @@ public final class SystemProperties {
 
     @Getter
     private final int maxY = 30;
-
-    private final int batchSize = 10;
 
     /**
      * Private constructor. Use SystemProperties.PROPERTIES instead.
@@ -86,7 +84,4 @@ public final class SystemProperties {
         return getValue("caixagest.url", url);
     }
 
-    public int getBatchSize() {
-        return Integer.valueOf(getValue("caixagest.batch.size", batchSize));
-    }
 }

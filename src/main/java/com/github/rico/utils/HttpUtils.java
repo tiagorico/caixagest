@@ -48,10 +48,10 @@ public class HttpUtils {
     }
 
     public static String doPost(String cookieSessionId, Map<String, String> params) {
-        LOGGER.debug("Do POST to {} with {}.", PROPERTIES.getUrl(), cookieSessionId);
+        LOGGER.trace("Do POST to {} with {}.", PROPERTIES.getUrl(), cookieSessionId);
         HttpURLConnection connection = null;
-        final String postData = encodeParams(params);
         try {
+            final String postData = encodeParams(params);
             //Create connection
             final URL url = new URL(PROPERTIES.getUrl());
             connection = (HttpURLConnection) url.openConnection();
@@ -81,13 +81,13 @@ public class HttpUtils {
             //Get Response
             return readStream(connection.getInputStream());
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            LOGGER.error("Error while posting to caixagest.", e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
         }
+        return "NO_DATA";
     }
 
     private static String encodeParams(Map<String, String> params) {
@@ -98,7 +98,7 @@ public class HttpUtils {
                 builder.append(key).append("=").append(URLEncoder.encode(
                         params.get(key), "UTF-8")).append("&");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                LOGGER.error("Error while encoding params.", e);
             }
         });
         return builder.toString();
@@ -126,7 +126,7 @@ public class HttpUtils {
             String inputLine;
             while ((inputLine = in.readLine()) != null) content.append(inputLine);
         }
-        LOGGER.debug(content.toString());
+        LOGGER.trace(content.toString());
         return content.toString();
     }
 
