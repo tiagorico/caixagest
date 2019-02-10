@@ -1,8 +1,8 @@
 package com.github.rico.common;
 
-import com.github.rico.entity.Fund;
-import com.github.rico.entity.Rating;
-import com.github.rico.entity.RatingID;
+import com.github.rico.model.entity.Fund;
+import com.github.rico.model.entity.Rating;
+import com.github.rico.model.entity.RatingID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

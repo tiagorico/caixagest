@@ -1,6 +1,6 @@
 package com.github.rico.dao;
 
-import com.github.rico.entity.Fund;
+import com.github.rico.model.entity.Fund;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,11 @@ import static javax.transaction.Transactional.TxType.SUPPORTS;
 public class FundDAOBean extends GenericDAOBean<Fund, Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FundDAOBean.class);
+
+    @Override
+    public List<Fund> findAll() {
+        return manager.createQuery("FROM Fund ORDER BY id").getResultList();
+    }
 
     public Optional<Fund> findFundByUUID(UUID uuid) {
         TypedQuery<Fund> query = manager.createQuery(

@@ -2,9 +2,9 @@ package com.github.rico.business;
 
 import com.github.rico.dao.FundDAOBean;
 import com.github.rico.dao.RatingDAOBean;
-import com.github.rico.entity.Fund;
-import com.github.rico.entity.Rating;
-import com.github.rico.entity.RatingID;
+import com.github.rico.model.entity.Fund;
+import com.github.rico.model.entity.Rating;
+import com.github.rico.model.entity.RatingID;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,8 +26,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import static com.github.rico.entity.Fund.Status.DISABLE;
-import static com.github.rico.entity.Fund.Status.ENABLE;
+import static com.github.rico.model.entity.Fund.Status.DISABLE;
+import static com.github.rico.model.entity.Fund.Status.ENABLE;
 import static com.github.rico.utils.HttpUtils.*;
 import static com.github.rico.utils.SystemProperties.PROPERTIES;
 import static javax.transaction.Transactional.TxType.REQUIRED;
@@ -45,14 +45,17 @@ public class CaixaGestServiceBean {
     @Inject
     private RatingDAOBean ratingDAOBean;
 
-    @Resource(name = "ConnectionFactory")
+    @Resource(name = "JmsConnectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Resource(name = "RatingsQueue")
     private Queue queue;
 
+    @Transactional(REQUIRED)
+    public void insertRating(Rating rating) {
+        ratingDAOBean.insert(rating);
+    }
 
-    @Transactional(SUPPORTS)
     public void updateRates(final Fund fund) {
         // get remote data from url
         final Map<String, String> values = doGet();
@@ -199,8 +202,4 @@ public class CaixaGestServiceBean {
         return toBeTrimmed.replace("\u00A0", "").trim();
     }
 
-    @Transactional(REQUIRED)
-    public void insertRating(Rating rating) {
-        ratingDAOBean.insert(rating);
-    }
 }

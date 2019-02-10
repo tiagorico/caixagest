@@ -1,7 +1,7 @@
 package com.github.rico.dao;
 
-import com.github.rico.entity.Rating;
-import com.github.rico.entity.RatingID;
+import com.github.rico.model.entity.Rating;
+import com.github.rico.model.entity.RatingID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,5 +41,15 @@ public class RatingDAOBean extends GenericDAOBean<Rating, RatingID> {
             LOGGER.debug("No result found.", e);
         }
         return result;
+    }
+
+    public List<Object> findMetrics(Integer fundId) {
+        TypedQuery<Object> query = manager.createQuery(
+                "SELECT max(r.value), r.id.date, min(r.value), r.id.date " +
+                        "FROM Rating r WHERE r.id.fund.id = :fundId",
+                Object.class);
+        query.setParameter("fundId", fundId);
+
+        return query.getResultList();
     }
 }

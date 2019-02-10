@@ -1,6 +1,6 @@
 package com.github.rico.business;
 
-import com.github.rico.entity.Fund;
+import com.github.rico.model.entity.Fund;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

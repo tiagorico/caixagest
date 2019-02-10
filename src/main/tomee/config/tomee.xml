@@ -25,4 +25,25 @@
         timeBetweenEvictionRuns = -1 millisecond
         validationQuery SELECT 1
     </Resource>
+
+    <Resource id="JmsResourceAdapter" type="ActiveMQResourceAdapter">
+        BrokerXmlConfig = broker:(tcp://localhost:61616)
+        ServerUrl = tcp://localhost:61616
+    </Resource>
+
+    <Resource id="JmsConnectionFactory" type="javax.jms.ConnectionFactory">
+        ResourceAdapter = JmsResourceAdapter
+        connectionMaxIdleTime = 15 Minutes
+        connectionMaxWaitTime = 5 seconds
+        poolMaxSize = 100
+        poolMinSize = 10
+        transactionSupport = xa
+    </Resource>
+
+    <Container id="JmsMdbContainer" ctype="MESSAGE">
+        ResourceAdapter = JmsResourceAdapter
+    </Container>
+
+    <Resource id="RatingsQueue" type="javax.jms.Queue"/>
+
 </tomee>

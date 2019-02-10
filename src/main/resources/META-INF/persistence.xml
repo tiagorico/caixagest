@@ -9,8 +9,8 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <jta-data-source>java:/caixagestDS</jta-data-source>
 
-    <class>com.github.rico.entity.Fund</class>
-    <class>com.github.rico.entity.Rating</class>
+    <class>com.github.rico.model.entity.Fund</class>
+    <class>com.github.rico.model.entity.Rating</class>
 
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
