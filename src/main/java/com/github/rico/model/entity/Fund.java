@@ -17,23 +17,27 @@ import java.util.UUID;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
- * Entity for fund
+ * This class represents the Fund entity.
  *
- * @author rico
+ * @author Luis Rico
+ * @since 1.0.0
  */
 @Setter
 @Getter
 @Builder
-@ToString(exclude = "ratings")
+@ToString(exclude = "rates")
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
-@EqualsAndHashCode(exclude = {"id", "name", "status", "ratings"})
+@EqualsAndHashCode(exclude = {"id", "name", "status", "rates"})
 @Entity
 @Table(name = "fund")
 public class Fund implements Serializable {
 
+    /**
+     * Status enum for fund.
+     */
     public enum Status {
-        DISABLE, ENABLE;
+        DISABLE, ENABLE
     }
 
     @Id
@@ -54,6 +58,46 @@ public class Fund implements Serializable {
 
     @OneToMany(mappedBy = "id.fund", cascade = CascadeType.ALL)
     @OrderBy(value = "id.date")
-    private Set<Rating> ratings;
+    private Set<Rate> rates;
 
+    @Transient
+    private Double min;
+
+    @Transient
+    private Double max;
+
+    @Transient
+    private Double average;
+
+    @Transient
+    private Double standardDeviation;
+
+    @Transient
+    private Double yesterday;
+
+    @Transient
+    private Double today;
+
+    @Transient
+    private Double dayBeforeYesterday;
+
+    public Fund(final Integer id,
+                final String name,
+                final Double max,
+                final Double min,
+                final Double average,
+                final Double standardDeviation,
+                final Double today,
+                final Double yesterday,
+                final Double dayBeforeYesterday) {
+        this.id = id;
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.average = average;
+        this.standardDeviation = standardDeviation;
+        this.yesterday = yesterday;
+        this.today = today;
+        this.dayBeforeYesterday = dayBeforeYesterday;
+    }
 }

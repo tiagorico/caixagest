@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
  * @author rico
  */
 @RunWith(Arquillian.class)
-public class RatingDAOBeanTest extends TestUtils {
+public class RateDAOBeanTest extends TestUtils {
 
     @Inject
-    private RatingDAOBean ratingDAOBean;
+    private RateDAOBean rateDAOBean;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -29,13 +29,13 @@ public class RatingDAOBeanTest extends TestUtils {
 
     @Test
     public void testFindAll() {
-        assertTrue(ratingDAOBean.findAll().size() > 0);
+        assertTrue(rateDAOBean.findAll().size() > 0);
     }
 
     @Test
     public void testLastDate() {
-        assertTrue(ratingDAOBean.findMaxDateFromFund(1).isPresent());
-        assertTrue(!ratingDAOBean.findMaxDateFromFund(2).isPresent());
+        assertTrue(rateDAOBean.findMaxDateFromFund(1).isPresent());
+        assertTrue(!rateDAOBean.findMaxDateFromFund(2).isPresent());
     }
 
 }

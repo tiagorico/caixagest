@@ -18,6 +18,12 @@ import java.util.concurrent.*;
 
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
+/**
+ * Singleton startup service that is responsible for launching several threads to fetch data from caixagest website.
+ *
+ * @author Luis Rico
+ * @since 1.0.0
+ */
 @Singleton
 @Startup
 @Transactional(SUPPORTS)
@@ -39,13 +45,13 @@ public class StartupServiceBean {
         //check for updates on caixagest
         executor = Executors.newSingleThreadExecutor();
         // execute the task
-        final Future<List<Fund>> future = executor.submit(() -> caixaGestServiceBean.checkFunds());
+        final Future<List<Fund>> future = executor.submit(() -> caixaGestServiceBean.fetchFunds());
         final List<Fund> existing = future.get(5, TimeUnit.SECONDS);
 
         LOGGER.info("Proceeding with {} funds.", existing.size());
 
         pool = Executors.newFixedThreadPool(existing.size());
-        existing.forEach(fund -> pool.execute(() -> caixaGestServiceBean.updateRates(fund)));
+        existing.forEach(fund -> pool.execute(() -> caixaGestServiceBean.fetchRates(fund)));
 
         LOGGER.info("Took me {} to complete.", startTime.until(LocalDateTime.now(), ChronoUnit.SECONDS));
     }

@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  * TODO add a description here
  *
@@ -26,7 +28,9 @@ public class StatisticDTO {
     private String name;
     private Double min;
     private Double max;
-    private Double avg;
+    private Double average;
+    private Double standardDeviation;
     private Double yesterday;
     private Double today;
+    private Double dayBeforeYesterday;
 }

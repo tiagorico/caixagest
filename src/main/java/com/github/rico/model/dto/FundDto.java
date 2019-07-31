@@ -13,9 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * TODO add a description here
+ * Data transfer object for the Fund entity.
  *
- * @author rico
+ * @author Luis Rico
+ * @since 1.0.0
  */
 @NoArgsConstructor
 @AllArgsConstructor

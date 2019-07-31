@@ -1,8 +1,8 @@
 package com.github.rico.common;
 
 import com.github.rico.model.entity.Fund;
-import com.github.rico.model.entity.Rating;
-import com.github.rico.model.entity.RatingID;
+import com.github.rico.model.entity.Rate;
+import com.github.rico.model.entity.RateID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,12 +45,12 @@ public class ProvisionTestData {
         funds.add(Fund.builder().uuid(UUID.randomUUID()).name("Teste 2").status(Fund.Status.ENABLE).build());
         funds.forEach(entityManager::persist);
 
-        final List<Rating> ratings = new ArrayList<>();
+        final List<Rate> rates = new ArrayList<>();
         Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).stream().forEach(i ->
-                ratings.add(Rating.builder().id(RatingID.builder().date(LocalDate.now().minusDays((long) i))
+                rates.add(Rate.builder().id(RateID.builder().date(LocalDate.now().minusDays((long) i))
                         .fund(funds.get(0)).build()).value(i.doubleValue()).build())
         );
-        ratings.forEach(entityManager::persist);
+        rates.forEach(entityManager::persist);
 
         entityManager.flush();
     }
@@ -64,7 +64,7 @@ public class ProvisionTestData {
 //        entityManager.createQuery(allFunds.select(allFunds.from(Fund.class)))
 //                .getResultList()
 //                .forEach(entityManager::remove);
-        entityManager.createQuery("DELETE FROM com.github.rico.entity.Rating").executeUpdate();
+        entityManager.createQuery("DELETE FROM com.github.rico.entity.Rate").executeUpdate();
         entityManager.createQuery("DELETE FROM com.github.rico.entity.Fund").executeUpdate();
 
     }

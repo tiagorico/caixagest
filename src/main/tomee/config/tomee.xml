@@ -44,6 +44,6 @@
         ResourceAdapter = JmsResourceAdapter
     </Container>
 
-    <Resource id="RatingsQueue" type="javax.jms.Queue"/>
+    <Resource id="RatesQueue" type="javax.jms.Queue"/>
 
 </tomee>

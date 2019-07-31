@@ -16,16 +16,17 @@ import java.time.LocalDate;
 import static javax.persistence.FetchType.LAZY;
 
 /**
- * TODO add a description here
+ * This class represents the Rate identifier.
  *
- * @author rico
+ * @author Luis Rico
+ * @since 1.0.0
  */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Embeddable
-public class RatingID implements Serializable {
+public class RateID implements Serializable {
 
     @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "fund_id", foreignKey = @ForeignKey(name = "FK_RATING_FUND"))

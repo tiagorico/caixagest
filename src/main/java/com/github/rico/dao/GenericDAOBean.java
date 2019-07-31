@@ -25,16 +25,21 @@ import static java.util.Optional.of;
  *
  * @param <T>  The entity class
  * @param <PK> The entity primary key
- *             <p>
- *             Created by Luis Tiago Rico
+ * @author Tiago Rico
+ * @since 1.0.0
  */
 @SuppressWarnings("unchecked")
 public abstract class GenericDAOBean<T, PK extends Serializable> {
+
     private final Logger LOG = LoggerFactory.getLogger(GenericDAOBean.class);
+
     @PersistenceContext(unitName = "caixagestPu")
     protected EntityManager manager;
+
     private Class<T> persistentClass;
+
     private Class<PK> primaryKeyClass;
+
     private SingularAttribute<T, PK> primaryKey;
 
     @PostConstruct
@@ -46,11 +51,24 @@ public abstract class GenericDAOBean<T, PK extends Serializable> {
         this.primaryKey = manager.getMetamodel().entity(persistentClass).getDeclaredId(primaryKeyClass);
     }
 
-    public Optional<T> findById(PK id) {
+    /**
+     * Finds a generic entity.
+     *
+     * @param id the primary key
+     * @return an optional object containing or not the entity
+     */
+    public Optional<T> findById(final PK id) {
         return Optional.ofNullable(manager.find(persistentClass, id));
     }
 
-    public Optional<T> findById(PK id, final Consumer<Root<T>> fetch) {
+    /**
+     * Finds a generic entity.
+     *
+     * @param id the primary key
+     * @param fetch a consumer function to fetch related entities
+     * @return an optional object containing or not the entity
+     */
+    public Optional<T> findById(final PK id, final Consumer<Root<T>> fetch) {
         final CriteriaBuilder builder = manager.getCriteriaBuilder();
         final CriteriaQuery<T> query = builder.createQuery(persistentClass);
 
@@ -69,15 +87,31 @@ public abstract class GenericDAOBean<T, PK extends Serializable> {
         return result;
     }
 
+    /**
+     * Finds all entities.
+     *
+     * @return a list of entities
+     */
     public List<T> findAll() {
         return manager.createQuery("FROM " + persistentClass.getName()).getResultList();
     }
 
+    /**
+     * Inserts a entity in database.
+     *
+     * @param o the entity to be inserted
+     * @return same entity inserted
+     */
     public T insert(T o) {
         manager.persist(o);
         return o;
     }
 
+    /**
+     * Deletes an entity from databse.
+     *
+     * @param o the entity to be deleted.
+     */
     public void delete(T o) {
         manager.remove(o);
     }

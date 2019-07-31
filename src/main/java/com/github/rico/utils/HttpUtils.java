@@ -20,9 +20,10 @@ import java.util.Map;
 import static com.github.rico.utils.SystemProperties.PROPERTIES;
 
 /**
- * TODO add a description here
+ * Helper class to deal with HTTP requests.
  *
- * @author rico
+ * @author Luis Rico
+ * @since 1.0.0
  */
 public class HttpUtils {
 
@@ -32,17 +33,46 @@ public class HttpUtils {
 
     public static final String HTML = "HTML";
 
+    private static final String GET = "GET";
+
+    private static final String POST = "POST";
+
+    private static final String CONTENT_TYPE = "Content-Type";
+
+    private static final String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
+
+    private static final String CONTENT_LENGTH = "Content-Length";
+
+    private static final String USER_AGENT = "User-Agent";
+
+    private static final String ACCEPT = "Accept";
+
+    private static final String BROWSER = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36";
+
+    private static final String ACCEPT_ALL = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
+
+    private static final String UTF_8 = "UTF-8";
+
+    private static final String SET_COOKIE = "Set-Cookie";
+
+    public static final String NO_DATA = "NO_DATA";
+
+    /**
+     * Performs a GET method against specified URL
+     *
+     * @return
+     */
     public static Map<String, String> doGet() {
         LOGGER.trace("Do GET to {}", PROPERTIES.getUrl());
-        Map<String, String> values = new HashMap<>();
+        final Map<String, String> values = new HashMap<>();
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(PROPERTIES.getUrl()).openConnection();
-            con.setRequestMethod("GET");
+            con.setRequestMethod(GET);
             values.put(COOKIE, getCookie(con));
             values.put(HTML, readStream(con.getInputStream()));
             con.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error while reading from http connection", e);
         }
         return values;
     }
@@ -55,19 +85,13 @@ public class HttpUtils {
             //Create connection
             final URL url = new URL(PROPERTIES.getUrl());
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(POST);
 
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Cookie", cookieSessionId);
-            connection.setRequestProperty(
-                    "User-Agent",
-                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
-            );
-            connection.setRequestProperty(
-                    "Accept",
-                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
-            );
-            connection.setRequestProperty("Content-Length", Integer.toString(postData.getBytes().length));
+            connection.setRequestProperty(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED);
+            connection.setRequestProperty(COOKIE, cookieSessionId);
+            connection.setRequestProperty(USER_AGENT, BROWSER);
+            connection.setRequestProperty(ACCEPT, ACCEPT_ALL);
+            connection.setRequestProperty(CONTENT_LENGTH, Integer.toString(postData.getBytes().length));
 
             connection.setUseCaches(false);
             connection.setDoOutput(true);
@@ -87,7 +111,7 @@ public class HttpUtils {
                 connection.disconnect();
             }
         }
-        return "NO_DATA";
+        return NO_DATA;
     }
 
     private static String encodeParams(Map<String, String> params) {
@@ -95,8 +119,9 @@ public class HttpUtils {
         params.keySet().forEach(key -> {
             LOGGER.trace("Adding param {}={}", key, params.get(key));
             try {
-                builder.append(key).append("=").append(URLEncoder.encode(
-                        params.get(key), "UTF-8")).append("&");
+                builder.append(key).append("=")
+                        .append(URLEncoder.encode(params.get(key), UTF_8))
+                        .append("&");
             } catch (UnsupportedEncodingException e) {
                 LOGGER.error("Error while encoding params.", e);
             }
@@ -112,7 +137,7 @@ public class HttpUtils {
             if (headerName == null && headerValue == null) {
                 break;
             }
-            if ("Set-Cookie".equalsIgnoreCase(headerName)) {
+            if (SET_COOKIE.equalsIgnoreCase(headerName)) {
                 final String[] fields = headerValue.split(";\\s*");
                 return fields[0];
             }
@@ -126,7 +151,7 @@ public class HttpUtils {
             String inputLine;
             while ((inputLine = in.readLine()) != null) content.append(inputLine);
         }
-        LOGGER.trace(content.toString());
+        LOGGER.trace("Received {}",content);
         return content.toString();
     }
 

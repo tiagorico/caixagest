@@ -5,9 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility class to access system properties
- * <p>
- * Created by Rico on 19/01/2017
+ * Utility class to access system properties.
+ * It contains default values for each property but will try to retrieve them from a system.properties file.
+ *
+ * @autor Luis Rico
+ * @since 1.0.0
  */
 public final class SystemProperties {
 
@@ -50,22 +52,12 @@ public final class SystemProperties {
     @Getter
     private final int maxY = 30;
 
+    private final String decimalPattern = "#.0000";
+
     /**
      * Private constructor. Use SystemProperties.PROPERTIES instead.
      */
     private SystemProperties() {
-    }
-
-    private String getValue(String key, Object defaultValue) {
-        String value = String.valueOf(defaultValue);
-
-        if (System.getProperty(key) == null) {
-            LOGGER.warn("System property '{}' does not exist or is empty. Using default...", key);
-        } else {
-            value = System.getProperty(key);
-        }
-
-        return value;
     }
 
     public String getDateTimePattern() {
@@ -84,4 +76,19 @@ public final class SystemProperties {
         return getValue("caixagest.url", url);
     }
 
+    public String getDecimalPattern() {
+        return getValue("caixagest.decimal.pattern", url);
+    }
+
+    private String getValue(String key, Object defaultValue) {
+        String value = String.valueOf(defaultValue);
+
+        if (System.getProperty(key) == null) {
+            LOGGER.warn("System property '{}' does not exist or is empty. Using default...", key);
+        } else {
+            value = System.getProperty(key);
+        }
+
+        return value;
+    }
 }

@@ -14,15 +14,16 @@ import lombok.NoArgsConstructor;
 import org.apache.johnzon.mapper.JohnzonProperty;
 
 /**
- * TODO add a description here
+ * Data transfer object for the Rate entity.
  *
- * @author rico
+ * @author Luis Rico
+ * @since 1.0.0
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
-public class RatingDto {
+public class RateDto {
     @JohnzonProperty("y")
     private Double value;
     @JohnzonProperty("x")

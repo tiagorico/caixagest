@@ -5,48 +5,66 @@
                                      http://xmlns.jcp.org/xml/ns/persistence/orm_2_0.xsd" version="2.1">
 
     <!-- JPA Named Native Queries -->
-    <named-native-query name="GetAllJedi" result-set-mapping="StatsMapping">
+    <named-native-query name="Funds.Statistics" result-set-mapping="Funds.StatisticsMapping">
         <query>
             WITH
-            maxi AS (
-            SELECT r.fund_id, max(r.value) val
-            FROM rating r
-            GROUP BY r.fund_id
-            ),
-            mini AS (
-            SELECT r.fund_id, min(r.value) val
-            FROM rating r
-            GROUP BY r.fund_id
-            ),
-            today AS (
-            SELECT r.fund_id, r.date, r.value val
-            FROM rating r
-            WHERE r.date = (
-            SELECT max(date)
-            FROM rating
-            WHERE fund_id = r.fund_id
-            )
-            ),
-            yesterday AS (
-            SELECT r.fund_id, r.date, r.value val
-            FROM rating r
-            WHERE r.date = (
-            SELECT max(date) - 2
-            FROM rating
-            WHERE fund_id = r.fund_id
-            )
-            ),
-            aveg AS (
-            SELECT r.fund_id, cast(avg(r.value) AS numeric(36,4)) val
-            FROM rating r
-            GROUP BY r.fund_id
-            )
-            SELECT DISTINCT r.fund_id id, fund.name nam, maxi.val max, mini.val min,
-            aveg.val avg, today.val today, yesterday.val yesterday
-            FROM rating r, fund, maxi, mini, aveg, today, yesterday
+                maxi AS (
+                    SELECT r.fund_id, max(r.value) val
+                    FROM rate r
+                    GROUP BY r.fund_id
+                ),
+                mini AS (
+                    SELECT r.fund_id, min(r.value) val
+                    FROM rate r
+                    GROUP BY r.fund_id
+                ),
+                today AS (
+                    SELECT r.fund_id, r.date, r.value val
+                    FROM rate r
+                    WHERE r.date = (
+                        SELECT max(date)
+                        FROM rate
+                        WHERE fund_id = r.fund_id
+                        AND EXTRACT(DOW FROM date) NOT IN (0,6)
+                    )
+                ),
+                yesterday AS (
+                    SELECT r.fund_id, r.date, r.value val
+                    FROM rate r
+                    WHERE r.date = (
+                        SELECT max(date) - 1
+                        FROM rate
+                        WHERE fund_id = r.fund_id
+                        AND EXTRACT(DOW FROM date) NOT IN (0,6)
+                    )
+                ),
+                day_before_yesterday AS (
+                    SELECT r.fund_id, r.date, r.value val
+                    FROM rate r
+                    WHERE r.date = (
+                        SELECT max(date) - 2
+                        FROM rate
+                        WHERE fund_id = r.fund_id
+                        AND EXTRACT(DOW FROM date) NOT IN (0,6)
+                    )
+                ),
+                aveg AS (
+                    SELECT r.fund_id, avg(r.value) val
+                    FROM rate r
+                    GROUP BY r.fund_id
+                ),
+                stddev AS (
+                    SELECT r.fund_id, stddev(r.value) val
+                    FROM rate r
+                    GROUP BY r.fund_id
+                )
+            SELECT DISTINCT r.fund_id id, fund.name nam, maxi.val max, mini.val min, aveg.val aveg, stddev.val stddev, today.val today, yesterday.val yesterday, day_before_yesterday.val day_before_yesterday
+            FROM rate r, fund, maxi, mini, aveg, today, yesterday, day_before_yesterday, stddev
             WHERE r.fund_id = maxi.fund_id
             AND r.fund_id = mini.fund_id
             AND r.fund_id = aveg.fund_id
+            AND r.fund_id = stddev.fund_id
+            AND r.fund_id = day_before_yesterday.fund_id
             AND r.fund_id = yesterday.fund_id
             AND r.fund_id = today.fund_id
             AND r.fund_id = fund.id
@@ -54,15 +72,17 @@
         </query>
     </named-native-query>
 
-    <sql-result-set-mapping name="StatsMapping">
-        <constructor-result target-class="com.github.rico.model.dto.StatisticDTO">
+    <sql-result-set-mapping name="Funds.StatisticsMapping">
+        <constructor-result target-class="com.github.rico.model.entity.Fund">
             <column name="id"/>
-            <column name="name"/>
+            <column name="nam"/>
             <column name="max"/>
             <column name="min"/>
-            <column name="avg"/>
+            <column name="aveg"/>
+            <column name="stddev"/>
             <column name="today"/>
             <column name="yesterday"/>
+            <column name="day_before_yesterday"/>
         </constructor-result>
     </sql-result-set-mapping>
 

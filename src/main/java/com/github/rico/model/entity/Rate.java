@@ -18,9 +18,10 @@ import java.io.Serializable;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
- * TODO add a description here
+ * This class represents the Rate entity.
  *
- * @author rico
+ * @author Luis Rico
+ * @since 1.0.0
  */
 @Getter
 @Builder
@@ -29,12 +30,11 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @EqualsAndHashCode
 @Entity
-@Table(name = "rating")
-public class Rating implements Serializable {
+@Table(name = "rate")
+public class Rate implements Serializable {
     @EmbeddedId
-    private RatingID id;
+    private RateID id;
 
     @Column(name = "value", nullable = false)
     private Double value;
-
 }

@@ -7,9 +7,10 @@
  */
 package com.github.rico.web;
 
-import com.github.rico.business.FundsServiceBean;
+import com.github.rico.business.FundServiceBean;
 import com.github.rico.model.dto.FundDto;
-import com.github.rico.model.dto.RatingDto;
+import com.github.rico.model.dto.RateDto;
+import com.github.rico.model.dto.StatisticDTO;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,7 +22,8 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
- * TODO add a description here
+ * Restfull webservice for Fund resource.
+ * Provide methods to retrieve information regarding funds
  *
  * @author rico
  */
@@ -30,18 +32,25 @@ import java.util.List;
 public class FundsResource {
 
     @Inject
-    private FundsServiceBean fundsServiceBean;
+    private FundServiceBean fundServiceBean;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<FundDto> getFunds() {
-        return fundsServiceBean.getFunds();
+        return fundServiceBean.getFunds();
     }
 
     @GET
-    @Path("/{id}/rates")
+    @Path("/{fundId}/rates")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<RatingDto> getRatings(@PathParam("id") Integer id) {
-        return fundsServiceBean.getRatings(id);
+    public List<RateDto> getRates(@PathParam("fundId") Integer fundId) {
+        return fundServiceBean.getRates(fundId);
+    }
+
+    @GET
+    @Path("/statistics")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<StatisticDTO> getStatistics() {
+        return fundServiceBean.getStatistics();
     }
 }

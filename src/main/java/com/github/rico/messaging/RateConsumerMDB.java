@@ -8,7 +8,7 @@
 package com.github.rico.messaging;
 
 import com.github.rico.business.CaixaGestServiceBean;
-import com.github.rico.model.entity.Rating;
+import com.github.rico.model.entity.Rate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,26 +23,37 @@ import javax.transaction.Transactional;
 
 import static javax.transaction.Transactional.TxType.REQUIRED;
 
-@MessageDriven(name = "RatingsConsumerMDB", activationConfig = {
+/**
+ * Message driven bean responsible for processing all messages from the Rates Queue.
+ *
+ * @author Luis Rico
+ * @since 1.0.0
+ */
+@MessageDriven(name = "RateConsumerMDB", activationConfig = {
         @ActivationConfigProperty(
                 propertyName = "destinationType",
                 propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(
                 propertyName = "destination",
-                propertyValue = "RatingsQueue")})
+                propertyValue = "RatesQueue")})
 @Transactional(REQUIRED)
-public class RatingsConsumerMDB implements MessageListener {
+public class RateConsumerMDB implements MessageListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RatingsConsumerMDB.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RateConsumerMDB.class);
 
     @Inject
     private CaixaGestServiceBean service;
 
+    /**
+     * The method responsible for processing the message.
+     *
+     * @param message the object message
+     */
     public void onMessage(Message message) {
         try {
-            Rating rate = (Rating) ((ObjectMessage) message).getObject();
-            LOGGER.debug("Received message.", rate.toString());
-            service.insertRating(rate);
+            final Rate rate = (Rate) ((ObjectMessage) message).getObject();
+            LOGGER.debug("Received message {}.", rate.toString());
+            service.insertRate(rate);
         } catch (JMSException e) {
             LOGGER.error("Error while on received message.", e);
         }
