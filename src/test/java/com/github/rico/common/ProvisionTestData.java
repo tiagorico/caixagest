@@ -64,8 +64,8 @@ public class ProvisionTestData {
 //        entityManager.createQuery(allFunds.select(allFunds.from(Fund.class)))
 //                .getResultList()
 //                .forEach(entityManager::remove);
-        entityManager.createQuery("DELETE FROM com.github.rico.entity.Rate").executeUpdate();
-        entityManager.createQuery("DELETE FROM com.github.rico.entity.Fund").executeUpdate();
+        entityManager.createQuery("DELETE FROM com.github.rico.model.entity.Rate").executeUpdate();
+        entityManager.createQuery("DELETE FROM com.github.rico.model.entity.Fund").executeUpdate();
 
     }
 }
