@@ -24,7 +24,7 @@
         <dependency.version.lombok>1.18.8</dependency.version.lombok>
         <dependency.version.commons-lang>3.5</dependency.version.commons-lang>
         <dependency.version.slf4j>1.7.21</dependency.version.slf4j>
-        <dependency.version.jsoup>1.11.2</dependency.version.jsoup>
+        <dependency.version.jsoup>1.15.3</dependency.version.jsoup>
         <dependency.version.corsfilter>1.0.0</dependency.version.corsfilter>
         <dependency.version.junit>4.12</dependency.version.junit>
     </properties>
